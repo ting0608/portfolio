@@ -22,9 +22,11 @@ npm run dev
 
 1. Push this repo to GitHub (or connect your Git provider).
 2. In Amplify Console → **Host web app** → connect the repo.
-3. Set **App root** to `portfolio-app` if the repo root also contains `readme.txt`.
-4. Amplify reads `amplify.yml` — build output is `dist/`.
-5. SPA routing is handled via `customRedirects` in `amplify.yml`.
+3. **App root** must be empty (repo root). Do **not** use `portfolio-app` — the app was moved to the repository root.
+4. Amplify reads `amplify.yml` at the repo root — build output is `dist/`.
+5. Node **22** is required (see `.nvmrc`). Amplify runs `nvm use 22` in `amplify.yml`.
+
+If a build fails after the restructure, open the failed build log and check for `package.json` not found (wrong app root) or Node/Vite errors (upgrade Node to 22 in build settings).
 
 ## When you might want AWS backend later
 
