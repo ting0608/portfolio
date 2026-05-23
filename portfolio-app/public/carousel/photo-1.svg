@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Placeholder photo 1">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B262C"/>
+      <stop offset="100%" stop-color="#3282B8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g1)"/>
+  <text x="50%" y="52%" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, sans-serif" font-size="28">Replace with your photo</text>
+</svg>

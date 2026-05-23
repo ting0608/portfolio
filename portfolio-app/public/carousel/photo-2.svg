@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Placeholder photo 2">
+  <defs>
+    <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0F4C75"/>
+      <stop offset="100%" stop-color="#BBE1FA"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g2)"/>
+  <text x="50%" y="52%" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, sans-serif" font-size="28">Carousel slot 2</text>
+</svg>
