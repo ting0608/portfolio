@@ -1,6 +1,6 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app'
 import {
-  getAnalytics,
+  initializeAnalytics,
   isSupported,
   setAnalyticsCollectionEnabled,
   type Analytics,
@@ -23,21 +23,33 @@ export function isFirebaseConfigured() {
   )
 }
 
+export function isAnalyticsDebugMode() {
+  return (
+    import.meta.env.DEV ||
+    new URLSearchParams(window.location.search).has('debug_analytics')
+  )
+}
+
 let app: FirebaseApp | null = null
 let analytics: Analytics | null = null
 let initPromise: Promise<Analytics | null> | null = null
 
-export async function initFirebaseAnalytics() {
+export function getAnalyticsInstance() {
+  return analytics
+}
+
+/** Call once at app startup; safe to await before sending events. */
+export function ensureAnalytics() {
   if (!isFirebaseConfigured()) {
-    if (import.meta.env.DEV) {
-      console.info(
-        '[analytics] Firebase env vars missing — copy .env.example to .env',
+    if (isAnalyticsDebugMode()) {
+      console.warn(
+        '[analytics] Firebase env vars missing in this build — events will not send.',
       )
     }
-    return null
+    return Promise.resolve(null)
   }
 
-  if (analytics) return analytics
+  if (analytics) return Promise.resolve(analytics)
   if (initPromise) return initPromise
 
   initPromise = (async () => {
@@ -46,16 +58,31 @@ export async function initFirebaseAnalytics() {
       return null
     }
 
+    if (isAnalyticsDebugMode()) {
+      ;(window as Window & { FIREBASE_ANALYTICS_DEBUG_MODE?: boolean }).FIREBASE_ANALYTICS_DEBUG_MODE =
+        true
+    }
+
     app = initializeApp(firebaseConfig)
-    analytics = getAnalytics(app)
+    analytics = initializeAnalytics(app, {
+      config: {
+        send_page_view: false,
+        debug_mode: isAnalyticsDebugMode(),
+      },
+    })
     setAnalyticsCollectionEnabled(analytics, true)
 
-    if (import.meta.env.DEV) {
-      console.info('[analytics] Firebase initialized', firebaseConfig.measurementId)
+    if (isAnalyticsDebugMode()) {
+      console.info('[analytics] ready', firebaseConfig.measurementId)
     }
 
     return analytics
   })()
 
   return initPromise
+}
+
+/** @deprecated Use ensureAnalytics() */
+export async function initFirebaseAnalytics() {
+  return ensureAnalytics()
 }

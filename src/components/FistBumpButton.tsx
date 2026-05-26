@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { trackLikeClick } from '../lib/analytics'
+import { isAnalyticsDebugMode, isFirebaseConfigured } from '../lib/firebase'
 
 export function FistBumpButton() {
   const [bumped, setBumped] = useState(false)
@@ -7,6 +8,13 @@ export function FistBumpButton() {
   const onClick = () => {
     setBumped(true)
     trackLikeClick('hero')
+
+    if (isAnalyticsDebugMode() && !isFirebaseConfigured()) {
+      console.warn(
+        '[analytics] Fist bump clicked but Firebase is not configured in this build.',
+      )
+    }
+
     window.setTimeout(() => setBumped(false), 700)
   }
 

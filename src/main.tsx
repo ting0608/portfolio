@@ -6,6 +6,9 @@ import '@fontsource/comfortaa/latin-600.css'
 import '@fontsource/comfortaa/latin-700.css'
 import './index.css'
 import App from './App.tsx'
+import { ensureAnalytics } from './lib/firebase'
+
+void ensureAnalytics()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

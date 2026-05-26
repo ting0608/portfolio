@@ -74,17 +74,21 @@ Add your live host, for example:
 
 ## 5. Verify events
 
-1. Run the site locally with `.env` configured.
-2. Open the site, click **Fist bump**, sidebar icons, scroll hints, roadmap years.
-3. On the **live GitHub Pages** site, repeat after secrets are set and a new deploy finished.
-4. In Firebase Console → **Analytics** → **DebugView** (with [GA Debugger](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjpiihkd)) or wait for **Events** (can take hours).
+1. Run the site locally with `.env` configured (`npm run dev`).
+2. Open DevTools → **Console** — you should see `[analytics] ready G-...` when it works.
+3. Add `?debug_analytics=1` to the URL for extra console logs on every event.
+4. DevTools → **Network** → filter `collect` or `google-analytics` — requests should appear when you click **Fist bump**.
+5. In Firebase or GA4, open **Realtime** first (not the “Event count” card — that can stay empty for 24–48h).
+6. Custom events like `like_clicked` appear under **Analytics → Events** (search the event name). They are **not** “Key events” until you mark them.
+7. **Page title / screen class** use `page_view` and `screen_view`; check **Realtime** or **Pages and screens** after some traffic.
 
 ## Events tracked in this app
 
 | Event          | When                                       | Parameters                                            |
 | -------------- | ------------------------------------------ | ----------------------------------------------------- |
-| `page_view`    | App load                                   | `page_path`, `page_title`, `page_location`            |
-| `like_clicked` | Hero fist bump                             | `location` (e.g. `hero`)                              |
+| `page_view`    | App load                                   | `page_title`, `page_path`, `page_location`            |
+| `screen_view`  | App load                                   | `firebase_screen`, `firebase_screen_class`            |
+| `like_clicked` | Hero fist bump                             | `location`, `engagement_type`                         |
 | `button_click` | Nav, scroll hints, roadmap years, LinkedIn | `button_id` (e.g. `nav_roadmap`, `roadmap_year_2024`) |
 
 ### View counts in Firebase / GA4
@@ -112,5 +116,5 @@ Firebase Analytics and GA4 share the same property if you enabled GA during setu
 
 ### Other
 
-- **No events locally** — Check `.env`, restart `npm run dev`, confirm `measurementId` starts with `G-`. Console should log `[analytics] Firebase initialized G-...` in dev.
+- **No events locally** — Check `.env`, restart `npm run dev`, confirm `measurementId` starts with `G-`. Console should log `[analytics] ready G-...` in dev.
 - **Duplicate page views** — Normal in React Strict Mode during dev; production build fires once.
