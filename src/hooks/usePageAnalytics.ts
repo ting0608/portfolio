@@ -1,11 +1,15 @@
 import { useEffect } from 'react'
 import { trackPageView } from '../lib/analytics'
-import { isFirebaseConfigured } from '../lib/firebase'
+import { initFirebaseAnalytics, isFirebaseConfigured } from '../lib/firebase'
 
-/** Logs initial page view once Firebase is configured. */
+/** Initialize Analytics and log the first page view. */
 export function usePageAnalytics() {
   useEffect(() => {
     if (!isFirebaseConfigured()) return
-    trackPageView(window.location.pathname || '/')
+
+    void initFirebaseAnalytics().then((analytics) => {
+      if (!analytics) return
+      trackPageView(window.location.pathname || '/')
+    })
   }, [])
 }

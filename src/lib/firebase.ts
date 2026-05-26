@@ -1,5 +1,10 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app'
-import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics'
+import {
+  getAnalytics,
+  isSupported,
+  setAnalyticsCollectionEnabled,
+  type Analytics,
+} from 'firebase/analytics'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -23,14 +28,32 @@ let analytics: Analytics | null = null
 let initPromise: Promise<Analytics | null> | null = null
 
 export async function initFirebaseAnalytics() {
-  if (!isFirebaseConfigured()) return null
+  if (!isFirebaseConfigured()) {
+    if (import.meta.env.DEV) {
+      console.info(
+        '[analytics] Firebase env vars missing — copy .env.example to .env',
+      )
+    }
+    return null
+  }
+
   if (analytics) return analytics
   if (initPromise) return initPromise
 
   initPromise = (async () => {
-    if (!(await isSupported())) return null
+    if (!(await isSupported())) {
+      console.warn('[analytics] Firebase Analytics is not supported in this browser')
+      return null
+    }
+
     app = initializeApp(firebaseConfig)
     analytics = getAnalytics(app)
+    setAnalyticsCollectionEnabled(analytics, true)
+
+    if (import.meta.env.DEV) {
+      console.info('[analytics] Firebase initialized', firebaseConfig.measurementId)
+    }
+
     return analytics
   })()
 

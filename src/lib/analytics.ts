@@ -3,22 +3,30 @@ import { initFirebaseAnalytics, isFirebaseConfigured } from './firebase'
 
 export type AnalyticsParams = Record<string, string | number | boolean>
 
+async function withAnalytics(
+  run: (analytics: NonNullable<Awaited<ReturnType<typeof initFirebaseAnalytics>>>) => void,
+) {
+  if (!isFirebaseConfigured()) return
+  const analytics = await initFirebaseAnalytics()
+  if (!analytics) return
+  run(analytics)
+}
+
 /** Fire-and-forget custom event (no-op when Firebase env is missing). */
 export function trackEvent(eventName: string, params?: AnalyticsParams) {
-  if (!isFirebaseConfigured()) return
-
-  void initFirebaseAnalytics().then((analytics) => {
-    if (!analytics) return
+  void withAnalytics((analytics) => {
     logEvent(analytics, eventName, params)
   })
 }
 
 /** Standard page view for the single-page portfolio. */
-export function trackPageView(pagePath = '/') {
-  trackEvent('page_view', {
-    page_title: document.title,
-    page_location: window.location.href,
-    page_path: pagePath,
+export function trackPageView(pagePath = window.location.pathname || '/') {
+  void withAnalytics((analytics) => {
+    logEvent(analytics, 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: pagePath,
+    })
   })
 }
 

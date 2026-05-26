@@ -101,6 +101,16 @@ Firebase Analytics and GA4 share the same property if you enabled GA during setu
 
 ## Troubleshooting
 
-- **No events locally** — Check `.env`, restart `npm run dev`, disable ad blockers, confirm `measurementId` starts with `G-`.
-- **Works locally, not on GitHub Pages** — Add all seven `VITE_*` **repository secrets**, redeploy, and add `*.github.io` to Firebase **Authorized domains**.
+### “No data available” in GA4 / Firebase
+
+1. **Use Realtime first** — Standard reports (page views, events cards) can take **24–48 hours**. Open [Google Analytics](https://analytics.google.com) → **Reports** → **Realtime**, then click fist bump on your site.
+2. **GitHub Pages must bake Firebase into the build** — Vite only includes `VITE_*` vars at **build time**. Add all seven secrets under GitHub → **Settings** → **Secrets and variables** → **Actions**, then push to `main` to redeploy. The deploy workflow runs `scripts/verify-analytics-build.mjs` and **fails the build** if Firebase config is missing.
+3. **Authorized domains** — Firebase → **Project settings** → **Authorized domains** → add `ting0608.github.io` (or your custom domain).
+4. **Ad blockers** — Disable uBlock/Brave shields for your site while testing.
+5. **Network check** — DevTools → **Network** → filter `collect` or `google-analytics`. You should see requests when clicking fist bump.
+6. **DebugView** — Firebase → **Analytics** → **DebugView** + [Google Analytics Debugger](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjpiihkd) extension.
+
+### Other
+
+- **No events locally** — Check `.env`, restart `npm run dev`, confirm `measurementId` starts with `G-`. Console should log `[analytics] Firebase initialized G-...` in dev.
 - **Duplicate page views** — Normal in React Strict Mode during dev; production build fires once.
