@@ -246,6 +246,50 @@
   white-space: pre-line;
 }
 
+.closing-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-dark);
+}
+
+.meteor-shower {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  pointer-events: none;
+}
+
+.meteor-shower-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.closing-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: clamp(2rem, 6vw, 4rem);
+}
+
+.closing-text {
+  margin: 0;
+  max-width: min(92vw, 36rem);
+  text-align: center;
+  color: var(--color-white);
+  font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
 .work-section {
   background: var(--bg);
 }

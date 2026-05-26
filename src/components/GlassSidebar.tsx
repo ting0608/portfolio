@@ -19,6 +19,11 @@ const CLICK_LOCK_MS = 1400
 function getActiveSectionId() {
   const probeY = window.innerHeight * ACTIVE_PROBE_RATIO
 
+  const closing = document.getElementById('closing')
+  if (closing && closing.getBoundingClientRect().top <= probeY) {
+    return 'work'
+  }
+
   for (let i = NAV_ITEMS.length - 1; i >= 0; i -= 1) {
     const el = document.getElementById(NAV_ITEMS[i].id)
     if (!el) continue
