@@ -17,10 +17,10 @@ export function ClosingSection() {
           <br />
           and I wish to see you again if our paths cross.
           <br />
-          <br />
+          {/* <br />
           言尽于此，
           <br />
-          我们有缘再见。
+          再见。
           <br />
           <br />
           Itu sahaja dari I,
@@ -30,7 +30,7 @@ export function ClosingSection() {
           <br />
           以上です,
           <br />
-          またどこかでお会いできれば嬉しいです。
+          またどこかでお会いできれば嬉しいです。 */}
         </RevealText>
       </div>
     </section>
